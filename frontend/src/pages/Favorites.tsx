@@ -1,56 +1,42 @@
-import React, { useState } from 'react';
-import { items, categories, type Category } from '../data/items';
-import { DollarSign, Heart } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { items } from '../data/items';
+import { DollarSign, Heart, ArrowRight } from 'lucide-react';
 import { useFavorites } from '../hooks/useFavorites';
 
-const GoodThings: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<Category | '全部'>('全部');
-  const { toggleFavorite, isFavorite } = useFavorites();
+const Favorites: React.FC = () => {
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const favoriteItems = items.filter(item => favorites.includes(item.id));
 
-  const filteredItems = activeCategory === '全部' 
-    ? items 
-    : items.filter(item => item.category === activeCategory);
+  if (favoriteItems.length === 0) {
+    return (
+      <div className="flex flex-col items-center text-center py-20 gap-8">
+        <Heart size={64} className="text-[var(--color-morandi-grey)]" />
+        <div className="space-y-4">
+          <h1 className="text-3xl font-light text-[var(--color-primary)]">暂无收藏</h1>
+          <p className="text-[var(--color-secondary)] max-w-md">
+            浏览好物清单，点击❤️收藏你喜欢的物品。
+            <br />收藏的物品会保存在这里，方便随时查看。
+          </p>
+        </div>
+        <Link to="/good-things" className="bg-[var(--color-morandi-green)] text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity flex items-center gap-2">
+          去发现好物 <ArrowRight size={16} />
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-10">
       <div className="text-center space-y-4">
-        <h1 className="text-3xl font-light text-[var(--color-primary)]">精选极简好物</h1>
+        <h1 className="text-3xl font-light text-[var(--color-primary)]">我的收藏</h1>
         <p className="text-[var(--color-secondary)] max-w-2xl mx-auto">
-          这里收集了能带来价值、喜悦和简单的物品。
-          每一件好物都经过精挑细选，兼顾耐用性、实用性与美学价值。
+          这里是你精心挑选的好物收藏。共 {favoriteItems.length} 件。
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex flex-wrap justify-center gap-4">
-        <button
-          onClick={() => setActiveCategory('全部')}
-          className={`px-6 py-2 rounded-full text-sm transition-all duration-300 cursor-pointer
-            ${activeCategory === '全部' 
-              ? 'bg-[var(--color-primary)] text-white shadow-md' 
-              : 'bg-white text-[var(--color-secondary)] hover:bg-gray-100'}
-          `}
-        >
-          全部
-        </button>
-        {categories.map(category => (
-          <button
-            key={category}
-            onClick={() => setActiveCategory(category)}
-            className={`px-6 py-2 rounded-full text-sm transition-all duration-300 cursor-pointer
-              ${activeCategory === category 
-                ? 'bg-[var(--color-primary)] text-white shadow-md' 
-                : 'bg-white text-[var(--color-secondary)] hover:bg-gray-100'}
-            `}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredItems.map(item => (
+        {favoriteItems.map(item => (
           <div key={item.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col group">
             <div className="h-64 overflow-hidden relative">
               <img 
@@ -99,4 +85,4 @@ const GoodThings: React.FC = () => {
   );
 };
 
-export default GoodThings;
+export default Favorites;
