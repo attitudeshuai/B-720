@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { items, categories, type Category } from '../data/items';
 import { DollarSign, Heart } from 'lucide-react';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 const GoodThings: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | '全部'>('全部');
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const filteredItems = activeCategory === '全部' 
     ? items 
@@ -59,6 +61,18 @@ const GoodThings: React.FC = () => {
               <span className="absolute top-4 right-4 bg-white/90 px-3 py-1 text-xs uppercase tracking-widest font-medium rounded-sm backdrop-blur-sm text-[var(--color-primary)]">
                 {item.category}
               </span>
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleFavorite(item.id); }}
+                className="absolute top-4 left-4 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors cursor-pointer"
+              >
+                <Heart
+                  size={18}
+                  className={isFavorite(item.id)
+                    ? 'fill-[var(--color-morandi-pink)] text-[var(--color-morandi-pink)]'
+                    : 'text-[var(--color-secondary)]'
+                  }
+                />
+              </button>
             </div>
             
             <div className="p-6 flex flex-col flex-grow gap-4">
