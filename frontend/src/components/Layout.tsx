@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Sparkles, Trash2 } from 'lucide-react';
+import { Home, Sparkles, Heart, Trash2 } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,6 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <nav className="flex gap-8">
           <NavLink to="/" icon={<Home size={18} />} label="首页" active={isActive('/')} />
           <NavLink to="/good-things" icon={<Sparkles size={18} />} label="好物清单" active={isActive('/good-things')} />
+          <NavLink to="/favorites" icon={<Heart size={18} />} label="我的收藏" active={isActive('/favorites')} />
           <NavLink to="/declutter" icon={<Trash2 size={18} />} label="断舍离" active={isActive('/declutter')} />
         </nav>
       </header>
